@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MICKSTER VAULT | Admin Skin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color: #2c3e50; --accent-color: #e67e22; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
+        .sidebar { height: 100vh; background: var(--primary-color); color: white; position: fixed; width: 260px; transition: all 0.3s; }
+        .main-content { margin-left: 260px; padding: 40px; }
+        .card-upload { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: white; }
+        .form-label { font-weight: 600; color: #444; }
+        .btn-mickster { background: var(--accent-color); color: white; border-radius: 12px; padding: 12px 30px; font-weight: 600; border: none; width: 100%; transition: 0.3s; }
+        .btn-mickster:hover { background: #d35400; transform: translateY(-2px); }
+        #image-preview { width: 100%; height: 250px; border: 3px dashed #cbd5e0; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-top: 15px; position: relative; background: #fdfdfd; overflow: hidden; }
+        #image-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .category-badge { background: #ebf2ff; color: #3182ce; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; }
+        @media (max-width: 768px) { .sidebar { width: 100%; height: auto; position: relative; } .main-content { margin-left: 0; padding: 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar d-flex flex-column p-4 shadow">
+        <h2 class="text-center fw-bold mb-4" style="color: var(--accent-color);">MICKSTER</h2>
+        <p class="text-center small text-uppercase mb-5" style="letter-spacing: 2px;">Vault Developer</p>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item mb-3"><a href="#" class="nav-link text-white active bg-dark">Dashboard</a></li>
+            <li class="nav-item mb-3"><a href="#" class="nav-link text-white">My Skins</a></li>
+            <li class="nav-item mb-3"><a href="#" class="nav-link text-white">User Statistics</a></li>
+        </ul>
+        <div class="mt-auto">
+            <div class="p-3 bg-dark rounded-3 text-center">
+                <small class="d-block opacity-50">App Status</small>
+                <span class="text-success">● Connected</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <header class="mb-5">
+                <h1 class="fw-bold">Upload Bus Skins</h1>
+                <p class="text-muted">Jaza fomu hapa chini kuongeza skin mpya kwenye website yako.</p>
+            </header>
+
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="card-upload p-5">
+                        <form id="uploadForm" action="upload.php" method="POST" enctype="multipart/form-data">
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Jina la Basi/Skin</label>
+                                <input type="text" name="skin_title" class="form-control form-control-lg" placeholder="Mfano: Abood Military Edition" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Aina ya Basi (Category)</label>
+                                <select name="bus_type" class="form-select form-select-lg">
+                                    <option value="yutong_f12">Yutong F12</option>
+                                    <option value="zhongtong_mega">Zhongtong Mega</option>
+                                    <option value="higer">Higer</option>
+                                    <option value="yutong_d14">Yutong D14</option>
+                                    <option value="marcopolo_g7">Marcopolo G7</option>
+                                    <option value="kibamia">Kibamia</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Chagua File la Skin (Picha Halisi)</label>
+                                <input type="file" name="skin_image" id="skinInput" class="form-control" accept="image/*" required onchange="handlePreview(event)">
+                                <div id="image-preview">
+                                    <div class="text-center text-muted">
+                                        <p class="mb-0">Picha itatokea hapa baada ya kuichagua</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Maelezo/Credits (Optional)</label>
+                                <textarea name="credits" class="form-control" rows="3" placeholder="Mfano: Skin imetengenezwa na Mickster..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-mickster shadow-sm">PUBLISH SKIN NOW</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 mt-4 mt-xl-0">
+                    <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
+                        <h5 class="fw-bold">Tips kwa Admin</h5>
+                        <ul class="small text-muted ps-3 mt-3">
+                            <li class="mb-2">Tumia picha zenye ubora wa juu (HD) kwa matokeo mazuri.</li>
+                            <li class="mb-2">Hakikisha jina la basi linaonekana wazi kwenye kichwa cha habari.</li>
+                            <li class="mb-2">Skins za <strong>Military Bus</strong> zinawahi sana kupakuliwa!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Hapa unaweza kuweka API Key yako kwa matumizi ya baadaye
+        const MICKSTER_API_KEY = "AIzaSyDiNjWTVcqZYsiHDWyxvU35qoAakwhFZKk";
+
+        function handlePreview(event) {
+            const previewContainer = document.getElementById('image-preview');
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Unaweza kuongeza logic ya Firebase hapa chini ukitumia MICKSTER_API_KEY
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
