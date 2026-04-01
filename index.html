@@ -16,7 +16,6 @@
         .btn-mickster { background: var(--accent-color); color: white; border-radius: 12px; padding: 12px 30px; font-weight: 600; border: none; width: 100%; transition: 0.3s; }
         .btn-mickster:hover { background: #d35400; transform: translateY(-2px); color: white; }
         
-        /* Preview Box imebaki ile ile */
         #image-preview { width: 100%; height: 250px; border: 3px dashed #cbd5e0; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-top: 15px; position: relative; background: #fdfdfd; overflow: hidden; }
         #image-preview img { width: 100%; height: 100%; object-fit: contain; }
         
@@ -36,7 +35,7 @@
         <div class="mt-auto">
             <div class="p-3 bg-dark rounded-3 text-center">
                 <small class="d-block opacity-50">App Status</small>
-                <span class="text-success">● Connected</span>
+                <span class="text-success" id="db-status">● Connecting...</span>
             </div>
         </div>
     </div>
@@ -52,7 +51,6 @@
                 <div class="col-xl-8">
                     <div class="card-upload p-5">
                         <form id="uploadForm">
-                            
                             <div class="mb-4">
                                 <label class="form-label">Jina la Basi/Skin</label>
                                 <input type="text" id="skin_title" class="form-control form-control-lg" placeholder="Mfano: Abood Military Edition" required>
@@ -61,21 +59,21 @@
                             <div class="mb-4">
                                 <label class="form-label">Aina ya Basi (Category)</label>
                                 <select id="bus_type" class="form-select form-select-lg">
-                                    <option value="yutong_f12">Yutong F12</option>
-                                    <option value="zhongtong_mega">Zhongtong Mega</option>
-                                    <option value="higer">Higer</option>
-                                    <option value="yutong_d14">Yutong D14</option>
-                                    <option value="marcopolo_g7">Marcopolo G7</option>
-                                    <option value="kibamia">Kibamia</option>
+                                    <option value="Yutong F12">Yutong F12</option>
+                                    <option value="Zhongtong Mega">Zhongtong Mega</option>
+                                    <option value="Higer">Higer</option>
+                                    <option value="Yutong D14">Yutong D14</option>
+                                    <option value="Marcopolo G7">Marcopolo G7</option>
+                                    <option value="Kibamia">Kibamia</option>
                                 </select>
                             </div>
 
                             <div class="mb-4">
                                 <label class="form-label">Weka Link ya Skin (Catbox URL)</label>
-                                <input type="url" id="catbox_url" class="form-control" placeholder="https://files.catbox.moe/xxxxxx.png" required oninput="handleCatboxPreview()">
+                                <input type="url" id="catbox_url" class="form-control" placeholder="https://files.catbox.moe/xxxxxx.png" required>
                                 <div id="image-preview">
                                     <div class="text-center text-muted" id="preview-placeholder">
-                                        <p class="mb-0">Picha itatokea hapa baada ya kuweka link</p>
+                                        <p class="mb-0">Picha itatokea hapa...</p>
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +83,7 @@
                                 <textarea id="credits" class="form-control" rows="3" placeholder="Mfano: Skin imetengenezwa na Mickster..."></textarea>
                             </div>
 
-                            <button type="button" onclick="publishSkin()" class="btn btn-mickster shadow-sm">PUBLISH SKIN NOW</button>
+                            <button type="button" id="submitBtn" class="btn btn-mickster shadow-sm">PUBLISH SKIN NOW</button>
                         </form>
                     </div>
                 </div>
@@ -94,9 +92,8 @@
                     <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
                         <h5 class="fw-bold">Tips kwa Admin</h5>
                         <ul class="small text-muted ps-3 mt-3">
-                            <li class="mb-2">Tumia link ya moja kwa moja ya picha (Direct Link).</li>
-                            <li class="mb-2">Hakikisha link inaishia na .jpg, .png au .webp.</li>
-                            <li class="mb-2">Hii link itatumiwa na watumiaji ku-download pia!</li>
+                            <li class="mb-2">Tumia Direct Link ya Catbox.</li>
+                            <li class="mb-2">Data inaonekana Website papo hapo.</li>
                         </ul>
                     </div>
                 </div>
@@ -104,47 +101,74 @@
         </div>
     </div>
 
-    <script>
-        // Preview ya picha papo hapo
-        function handleCatboxPreview() {
-            const url = document.getElementById('catbox_url').value;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+        // Config yako na API Key uliyotoa
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiNjWTVcqZYsiHDWyxvU35qoAakwhFZKk",
+            authDomain: "mickster-vault.firebaseapp.com",
+            projectId: "mickster-vault",
+            storageBucket: "mickster-vault.appspot.com",
+            messagingSenderId: "109876543210",
+            appId: "1:109876543210:web:abcdef123456"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Update Status
+        document.getElementById('db-status').innerText = "● Connected";
+
+        // Preview Logic
+        document.getElementById('catbox_url').addEventListener('input', function() {
+            const url = this.value;
             const previewContainer = document.getElementById('image-preview');
-            
             if (url && url.includes('files.catbox.moe')) {
                 previewContainer.innerHTML = `<img src="${url}" alt="Catbox Preview">`;
-            } else {
-                previewContainer.innerHTML = `<div class="text-center text-muted"><p class="mb-0">Weka link sahihi ya Catbox...</p></div>`;
             }
-        }
+        });
 
-        // Logic ya kusave (Tayari kwa Firebase)
-        function publishSkin() {
+        // Publish Function
+        window.publishSkin = async function() {
+            const btn = document.getElementById('submitBtn');
             const title = document.getElementById('skin_title').value;
             const link = document.getElementById('catbox_url').value;
             const category = document.getElementById('bus_type').value;
+            const credits = document.getElementById('credits').value;
 
             if(!title || !link) {
-                alert("Jaza Jina na Link ya Catbox!");
+                alert("Tafadhali jaza jina na link ya Catbox!");
                 return;
             }
 
-            // Hii ndio Object itakayokwenda kwenye Firebase/Firestore yako
-            const newSkin = {
-                title: title,
-                category: category,
-                imageUrl: link,      // Display kwenya website
-                downloadUrl: link,   // Kazi ya pili: Download
-                credits: document.getElementById('credits').value,
-                timestamp: new Date().toISOString()
-            };
+            btn.disabled = true;
+            btn.innerText = "UPLOADING...";
 
-            console.log("Data ya kutuma Firebase:", newSkin);
-            alert("Skin '" + title + "' Imecherewa kwenye list!");
-            
-            // Hapa utaongeza: db.collection('skins').add(newSkin)...
-        }
+            try {
+                await addDoc(collection(db, "skins"), {
+                    title: title,
+                    category: category,
+                    imageUrl: link,
+                    downloadUrl: link,
+                    credits: credits,
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Skin '" + title + "' imechapishwa kikamilifu!");
+                document.getElementById('uploadForm').reset();
+                document.getElementById('image-preview').innerHTML = '<p class="text-muted">Picha itatokea hapa...</p>';
+            } catch (error) {
+                console.error("Error: ", error);
+                alert("Imefeli kutuma: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "PUBLISH SKIN NOW";
+            }
+        };
+
+        document.getElementById('submitBtn').onclick = window.publishSkin;
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
