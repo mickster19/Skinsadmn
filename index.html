@@ -3,109 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MICKSTER VAULT | Admin Skin Panel</title>
+    <title>MICKSTER VAULT | Download Bus Skins Free</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary-color: #2c3e50; --accent-color: #e67e22; }
-        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
-        .sidebar { height: 100vh; background: var(--primary-color); color: white; position: fixed; width: 260px; transition: all 0.3s; z-index: 1000; }
-        .main-content { margin-left: 260px; padding: 40px; }
-        .card-upload { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: white; }
-        .form-label { font-weight: 600; color: #444; }
-        .btn-mickster { background: var(--accent-color); color: white; border-radius: 12px; padding: 12px 30px; font-weight: 600; border: none; width: 100%; transition: 0.3s; }
-        .btn-mickster:hover { background: #d35400; transform: translateY(-2px); color: white; }
+        :root { --main-dark: #1a1a1a; --accent: #e67e22; --wa-green: #25D366; }
+        body { font-family: 'Poppins', sans-serif; background-color: #121212; color: #ffffff; }
         
-        #image-preview { width: 100%; height: 250px; border: 3px dashed #cbd5e0; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-top: 15px; position: relative; background: #fdfdfd; overflow: hidden; }
+        .navbar { background: var(--main-dark); border-bottom: 2px solid var(--accent); }
+        .navbar-brand { font-weight: 700; color: var(--accent) !important; letter-spacing: 1px; }
+
+        .hero { padding: 60px 0; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80'); background-size: cover; background-position: center; border-radius: 0 0 50px 50px; }
+
+        #admin-panel { display: none; background: #222; border: 1px solid var(--accent); border-radius: 20px; padding: 25px; margin-top: 20px; animation: fadeIn 0.5s; }
+        .form-control, .form-select { background: #333; border: 1px solid #444; color: white; }
+        .form-control:focus, .form-select:focus { background: #444; color: white; border-color: var(--accent); box-shadow: none; }
+
+        .skin-card { background: #222; border: none; border-radius: 15px; overflow: hidden; transition: 0.3s; margin-bottom: 25px; height: 100%; }
+        .skin-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(230, 126, 34, 0.2); }
+        .skin-img { height: 200px; object-fit: cover; width: 100%; border-bottom: 3px solid var(--accent); background: #333; }
+        .skin-info { padding: 15px; }
+        .btn-download { background: var(--accent); color: white; border: none; border-radius: 8px; width: 100%; font-weight: 600; padding: 10px; text-decoration: none; display: block; text-align: center; transition: 0.3s; }
+        .btn-download:hover { background: #d35400; color: white; }
+        
+        .filter-btn { background: #333; color: white; border: none; padding: 8px 20px; border-radius: 20px; margin: 5px; font-size: 0.9rem; transition: 0.3s; }
+        .filter-btn.active { background: var(--accent); }
+
+        .wa-float { position: fixed; width: 60px; height: 60px; bottom: 40px; right: 40px; background-color: var(--wa-green); color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); z-index: 100; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; }
+        .wa-float:hover { transform: scale(1.1); color: white; background-color: #128C7E; }
+
+        #image-preview { width: 100%; height: 150px; border: 2px dashed #444; border-radius: 10px; margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #image-preview img { width: 100%; height: 100%; object-fit: contain; }
-        
-        @media (max-width: 768px) { .sidebar { width: 100%; height: auto; position: relative; } .main-content { margin-left: 0; padding: 20px; } }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="sidebar d-flex flex-column p-4 shadow">
-        <h2 class="text-center fw-bold mb-4" style="color: var(--accent-color);">MICKSTER</h2>
-        <p class="text-center small text-uppercase mb-5" style="letter-spacing: 2px;">Vault Developer</p>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item mb-3"><a href="#" class="nav-link text-white active bg-dark">Dashboard</a></li>
-            <li class="nav-item mb-3"><a href="#" class="nav-link text-white">My Skins</a></li>
-            <li class="nav-item mb-3"><a href="#" class="nav-link text-white">User Statistics</a></li>
-        </ul>
-        <div class="mt-auto">
-            <div class="p-3 bg-dark rounded-3 text-center">
-                <small class="d-block opacity-50">App Status</small>
-                <span class="text-success" id="db-status">● Connecting...</span>
+    <a href="https://whatsapp.com/channel/0029Vb6MUtB6hENv28MTkw35" class="wa-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">MICKSTER VAULT</a>
+            <div id="admin-badge" class="badge bg-danger ms-2" style="display:none;">ADMIN MODE</div>
+        </div>
+    </nav>
+
+    <section class="hero text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">BURE BUS SKINS & MODS</h1>
+            <p class="lead">Pata Skins bora za Yutong D14, F12 na nyingine nyingi.</p>
+            
+            <div id="admin-panel" class="text-start">
+                <h4 class="text-warning fw-bold mb-3">Upload Skin Mpya</h4>
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <input type="text" id="upTitle" class="form-control" placeholder="Jina la Basi">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <select id="upCat" class="form-select">
+                            <option value="Yutong D14">Yutong D14</option>
+                            <option value="Yutong F12">Yutong F12</option>
+                            <option value="Zhongtong Mega">Zhongtong Mega</option>
+                            <option value="Marcopolo G7">Marcopolo G7</option>
+                            <option value="Kibamia">Kibamia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <input type="url" id="upImg" class="form-control" placeholder="Catbox Link" oninput="showPre()">
+                    </div>
+                </div>
+                <div id="image-preview" class="mb-2"><small class="text-muted">Picha itaonekana hapa</small></div>
+                <button onclick="saveToFirebase()" id="saveBtn" class="btn btn-warning w-100 fw-bold">PUBLISH TO WEBSITE</button>
+                <button onclick="logoutAdmin()" class="btn btn-sm btn-link text-white mt-2">Logout</button>
             </div>
+
+            <div class="mt-4 d-flex justify-content-center flex-wrap gap-2" id="filter-group">
+                <button class="filter-btn active" onclick="filterSkins('all', this)">Zote</button>
+                <button class="filter-btn" onclick="filterSkins('Yutong D14', this)">Yutong D14</button>
+                <button class="filter-btn" onclick="filterSkins('Yutong F12', this)">Yutong F12</button>
+                <button class="filter-btn" onclick="filterSkins('Zhongtong Mega', this)">Zhongtong Mega</button>
+                <button class="filter-btn" onclick="filterSkins('Marcopolo G7', this)">Marcopolo G7</button>
+                <button class="filter-btn" onclick="filterSkins('Kibamia', this)">Kibamia</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mt-5">
+        <div class="row" id="skins-container">
+            <p class="text-center">Inapakia skins...</p>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="container-fluid">
-            <header class="mb-5">
-                <h1 class="fw-bold">Upload Bus Skins</h1>
-                <p class="text-muted">Tumia link ya Catbox kuweka skin mpya kwenye database.</p>
-            </header>
-
-            <div class="row">
-                <div class="col-xl-8">
-                    <div class="card-upload p-5">
-                        <form id="uploadForm">
-                            <div class="mb-4">
-                                <label class="form-label">Jina la Basi/Skin</label>
-                                <input type="text" id="skin_title" class="form-control form-control-lg" placeholder="Mfano: Abood Military Edition" required>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label">Aina ya Basi (Category)</label>
-                                <select id="bus_type" class="form-select form-select-lg">
-                                    <option value="Yutong F12">Yutong F12</option>
-                                    <option value="Zhongtong Mega">Zhongtong Mega</option>
-                                    <option value="Higer">Higer</option>
-                                    <option value="Yutong D14">Yutong D14</option>
-                                    <option value="Marcopolo G7">Marcopolo G7</option>
-                                    <option value="Kibamia">Kibamia</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label">Weka Link ya Skin (Catbox URL)</label>
-                                <input type="url" id="catbox_url" class="form-control" placeholder="https://files.catbox.moe/xxxxxx.png" required>
-                                <div id="image-preview">
-                                    <div class="text-center text-muted" id="preview-placeholder">
-                                        <p class="mb-0">Picha itatokea hapa...</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label class="form-label">Maelezo/Credits (Optional)</label>
-                                <textarea id="credits" class="form-control" rows="3" placeholder="Mfano: Skin imetengenezwa na Mickster..."></textarea>
-                            </div>
-
-                            <button type="button" id="submitBtn" class="btn btn-mickster shadow-sm">PUBLISH SKIN NOW</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 mt-4 mt-xl-0">
-                    <div class="card p-4 border-0 shadow-sm rounded-4 mb-4">
-                        <h5 class="fw-bold">Tips kwa Admin</h5>
-                        <ul class="small text-muted ps-3 mt-3">
-                            <li class="mb-2">Tumia Direct Link ya Catbox.</li>
-                            <li class="mb-2">Data inaonekana Website papo hapo.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    <footer class="py-5 mt-5 border-top border-secondary text-center text-muted">
+        <div class="container">
+            <p>&copy; 2026 MICKSTER VAULT. All Rights Reserved.</p>
+            <p class="small">Powered by Mickster Developer</p>
+            <span onclick="loginPrompt()" style="cursor:pointer; font-size: 10px; opacity: 0.3;">Admin Access</span>
         </div>
-    </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-        // Config yako na API Key uliyotoa
         const firebaseConfig = {
             apiKey: "AIzaSyDiNjWTVcqZYsiHDWyxvU35qoAakwhFZKk",
             authDomain: "mickster-vault.firebaseapp.com",
@@ -117,58 +121,77 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        
-        // Update Status
-        document.getElementById('db-status').innerText = "● Connected";
+        let currentData = [];
 
-        // Preview Logic
-        document.getElementById('catbox_url').addEventListener('input', function() {
-            const url = this.value;
-            const previewContainer = document.getElementById('image-preview');
-            if (url && url.includes('files.catbox.moe')) {
-                previewContainer.innerHTML = `<img src="${url}" alt="Catbox Preview">`;
-            }
-        });
-
-        // Publish Function
-        window.publishSkin = async function() {
-            const btn = document.getElementById('submitBtn');
-            const title = document.getElementById('skin_title').value;
-            const link = document.getElementById('catbox_url').value;
-            const category = document.getElementById('bus_type').value;
-            const credits = document.getElementById('credits').value;
-
-            if(!title || !link) {
-                alert("Tafadhali jaza jina na link ya Catbox!");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "UPLOADING...";
-
-            try {
-                await addDoc(collection(db, "skins"), {
-                    title: title,
-                    category: category,
-                    imageUrl: link,
-                    downloadUrl: link,
-                    credits: credits,
-                    createdAt: serverTimestamp()
-                });
-
-                alert("Skin '" + title + "' imechapishwa kikamilifu!");
-                document.getElementById('uploadForm').reset();
-                document.getElementById('image-preview').innerHTML = '<p class="text-muted">Picha itatokea hapa...</p>';
-            } catch (error) {
-                console.error("Error: ", error);
-                alert("Imefeli kutuma: " + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "PUBLISH SKIN NOW";
+        window.loginPrompt = () => {
+            const u = prompt("Username:");
+            const p = prompt("Password:");
+            if(u === "Mickster19" && p === "$120") {
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('admin-badge').style.display = 'inline';
+                localStorage.setItem('mickster_admin', 'true');
             }
         };
 
-        document.getElementById('submitBtn').onclick = window.publishSkin;
+        window.logoutAdmin = () => {
+            localStorage.removeItem('mickster_admin');
+            location.reload();
+        };
+
+        window.showPre = () => {
+            const url = document.getElementById('upImg').value;
+            if(url) document.getElementById('image-preview').innerHTML = `<img src="${url}">`;
+        };
+
+        window.saveToFirebase = async () => {
+            const t = document.getElementById('upTitle').value;
+            const c = document.getElementById('upCat').value;
+            const i = document.getElementById('upImg').value;
+            if(!t || !i) return alert("Jaza vyote!");
+            
+            document.getElementById('saveBtn').disabled = true;
+            try {
+                await addDoc(collection(db, "skins"), {
+                    title: t, category: c, img: i, date: serverTimestamp()
+                });
+                alert("Skin imewekwa tayari!");
+                location.reload();
+            } catch (e) { alert("Error!"); }
+        };
+
+        onSnapshot(query(collection(db, "skins"), orderBy("date", "desc")), (snap) => {
+            currentData = snap.docs.map(doc => doc.data());
+            render(currentData);
+        });
+
+        function render(data) {
+            const box = document.getElementById('skins-container');
+            box.innerHTML = data.map(s => `
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="skin-card">
+                        <img src="${s.img}" class="skin-img" loading="lazy">
+                        <div class="skin-info">
+                            <span class="badge bg-secondary mb-2">${s.category}</span>
+                            <h5 class="fw-bold">${s.title}</h5>
+                            <a href="${s.img}" download="${s.title}.png" class="btn-download">
+                                <i class="fa fa-download me-2"></i> DOWNLOAD SKIN
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.filterSkins = (cat, btn) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render(cat === 'all' ? currentData : currentData.filter(x => x.category === cat));
+        };
+
+        if(localStorage.getItem('mickster_admin')) {
+            document.getElementById('admin-panel').style.display = 'block';
+            document.getElementById('admin-badge').style.display = 'inline';
+        }
     </script>
 </body>
 </html>
